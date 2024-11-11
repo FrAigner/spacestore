@@ -1,0 +1,6 @@
+{
+    "api_keys": {
+        "your-secret-api-key-1": "./uploads/user1",
+        "your-secret-api-key-2": "./uploads/user2"
+    }
+}
