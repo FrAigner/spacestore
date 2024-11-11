@@ -3,28 +3,39 @@ package utils
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"os"
 )
 
-type APIKeys struct {
-	Keys map[string]string `json:"api_keys"`
+type APIKeysContainer struct {
+	Keys map[string]string `json:"keys"`
 }
 
-// LoadAPIKeys lädt API-Schlüssel und zugehörige Ordner aus einer JSON-Datei
+// LoadAPIKeys lädt die API-Schlüssel aus einer JSON-Datei
 func LoadAPIKeys(filePath string) (map[string]string, error) {
-	var apiKeys APIKeys
-
-	jsonFile, err := os.Open(filePath)
+	// Öffne die JSON-Datei
+	file, err := os.Open(filePath)
 	if err != nil {
+		log.Printf("Error opening API keys file: %v", err)
 		return nil, err
 	}
-	defer jsonFile.Close()
+	defer file.Close()
 
-	byteValue, _ := ioutil.ReadAll(jsonFile)
-	err = json.Unmarshal(byteValue, &apiKeys)
+	// Lese den Inhalt der Datei
+	data, err := ioutil.ReadAll(file)
 	if err != nil {
+		log.Printf("Error reading API keys file: %v", err)
 		return nil, err
 	}
 
-	return apiKeys.Keys, nil
+	// Parsen der JSON-Daten in die APIKeysContainer-Struktur
+	var container APIKeysContainer
+	err = json.Unmarshal(data, &container)
+	if err != nil {
+		log.Printf("Error unmarshalling API keys: %v", err)
+		return nil, err
+	}
+
+	// Rückgabe der geladenen API-Schlüssel
+	return container.Keys, nil
 }
