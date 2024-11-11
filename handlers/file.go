@@ -40,8 +40,10 @@ func FileUploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Erstelle den Benutzerordner, falls er noch nicht existiert
+	// Prefix "uploads" zum Ordnernamen hinzufügen
 	userDir := filepath.Join("uploads", uploadDir)
+
+	// Erstelle den Benutzerordner, falls er noch nicht existiert
 	err = os.MkdirAll(userDir, os.ModePerm)
 	if err != nil {
 		log.Printf("Error creating user directory '%s': %v", userDir, err)

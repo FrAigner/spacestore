@@ -79,6 +79,9 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	uploadDir := r.Header.Get("Upload-Dir")
 	log.Printf("Uploading file '%s' to folder '%s'", handler.Filename, uploadDir)
 
+	// Prefix "uploads" zum Ordnernamen hinzufügen
+	uploadDir = "./uploads/" + uploadDir
+
 	// Pfad für die Datei festlegen
 	filePath := uploadDir + "/" + handler.Filename
 
