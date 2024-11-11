@@ -32,20 +32,28 @@ func FileUploadHandler(w http.ResponseWriter, r *http.Request) {
 	// Logge den Dateinamen, der hochgeladen wird
 	log.Printf("Received file: %s", handler.Filename)
 
-	// Bestimme den Zielordner und Dateipfad
-	uploadDir := "uploads" // Alle Dateien werden in den "uploads"-Ordner gespeichert
-	filePath := filepath.Join(uploadDir, handler.Filename)
-
-	// Überprüfen, ob der Ordner existiert, und ggf. erstellen
-	err = os.MkdirAll(uploadDir, os.ModePerm)
-	if err != nil {
-		log.Printf("Error creating upload directory: %v", err)
-		http.Error(w, "Unable to create upload directory", http.StatusInternalServerError)
+	// Hole den Ordner aus den Header-Informationen (User-Ordner)
+	uploadDir := r.Header.Get("Upload-Dir")
+	if uploadDir == "" {
+		log.Println("No upload directory found")
+		http.Error(w, "Invalid directory", http.StatusInternalServerError)
 		return
 	}
-	log.Printf("Upload directory '%s' created or already exists", uploadDir)
 
-	// Erstelle die Datei im Zielordner
+	// Erstelle den Benutzerordner, falls er noch nicht existiert
+	userDir := filepath.Join("uploads", uploadDir)
+	err = os.MkdirAll(userDir, os.ModePerm)
+	if err != nil {
+		log.Printf("Error creating user directory '%s': %v", userDir, err)
+		http.Error(w, "Unable to create user directory", http.StatusInternalServerError)
+		return
+	}
+	log.Printf("User directory '%s' created or already exists", userDir)
+
+	// Pfad für die Datei im Benutzerordner festlegen
+	filePath := filepath.Join(userDir, handler.Filename)
+
+	// Erstelle die Datei im Benutzerordner
 	f, err := os.Create(filePath)
 	if err != nil {
 		log.Printf("Error creating file at path '%s': %v", filePath, err)
