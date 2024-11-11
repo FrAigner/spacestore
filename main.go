@@ -4,9 +4,9 @@ import (
 	"log"
 	"net/http"
 
-	"spacestore/handlers"
-	"spacestore/middleware"
-	"spacestore/utils"
+	"github.com/FrAigner/spacestore/handlers"
+	"github.com/FrAigner/spacestore/middleware"
+	"github.com/FrAigner/spacestore/utils"
 
 	"github.com/gorilla/mux"
 )
