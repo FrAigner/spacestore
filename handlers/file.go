@@ -33,7 +33,7 @@ func FileUploadHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Received file: %s", handler.Filename)
 
 	// Bestimme den Zielordner und Dateipfad
-	uploadDir := "uploads"
+	uploadDir := "uploads" // Alle Dateien werden in den "uploads"-Ordner gespeichert
 	filePath := filepath.Join(uploadDir, handler.Filename)
 
 	// Überprüfen, ob der Ordner existiert, und ggf. erstellen
